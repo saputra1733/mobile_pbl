@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_4/screens/agenda_nonjti.dart';
-import 'package:flutter_application_4/screens/dashboard_dosen_screen.dart';
-import 'package:flutter_application_4/screens/edit_profile_dosen_screen.dart';
-import 'package:flutter_application_4/screens/list_progress_agenda_screen.dart';
-import 'package:flutter_application_4/screens/login_screen.dart';
-import 'package:flutter_application_4/screens/profile_dosen_screen.dart';
-import 'package:flutter_application_4/screens/riwayat_agenda.dart';
-import 'package:flutter_application_4/screens/riwayat_nonjti.dart';
-import 'package:flutter_application_4/screens/update_progress.dart';
-import 'package:flutter_application_4/screens/dashboard_kaprodi_screen.dart';
-import 'package:flutter_application_4/screens/activity_list_screen.dart';
-import 'package:flutter_application_4/screens/download_document_screen.dart';
+import 'package:mobile_pbl/screens/agenda_nonjti.dart';
+import 'package:mobile_pbl/screens/dashboard_dosen_screen.dart';
+import 'package:mobile_pbl/screens/edit_profile_dosen_screen.dart';
+import 'package:mobile_pbl/screens/list_progress_agenda_screen.dart';
+import 'package:mobile_pbl/screens/login_screen.dart';
+import 'package:mobile_pbl/screens/profile_dosen_screen.dart';
+import 'package:mobile_pbl/screens/riwayat_agenda.dart';
+import 'package:mobile_pbl/screens/riwayat_nonjti.dart';
+import 'package:mobile_pbl/screens/update_progress.dart';
+import 'package:mobile_pbl/screens/dashboard_kaprodi_screen.dart';
+import 'package:mobile_pbl/screens/activity_list_screen.dart';
+import 'package:mobile_pbl/screens/download_document_screen.dart';
 
 void main() async{
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

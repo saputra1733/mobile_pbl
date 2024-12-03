@@ -3,6 +3,8 @@ import '../widgets/footer.dart';
 import '../widgets/prevent_overflow_widget.dart';
 
 class ActivityListScreen extends StatelessWidget {
+  const ActivityListScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -54,7 +56,7 @@ class ActivityListScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 Row(
                   children: [
-                    Expanded(
+                    const Expanded(
                       child: TextField(
                         decoration: InputDecoration(
                           hintText: "Cari kegiatan",
@@ -73,7 +75,7 @@ class ActivityListScreen extends StatelessWidget {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.grey[300],
-                        shape: RoundedRectangleBorder(
+                        shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
                             topRight: Radius.circular(10),
                             bottomRight: Radius.circular(10),
@@ -97,7 +99,7 @@ class ActivityListScreen extends StatelessWidget {
               ],
             ),
           ),
-          bottomNavigationBar: Footer(),
+          bottomNavigationBar: const Footer(),
         ),
       ),
     );
