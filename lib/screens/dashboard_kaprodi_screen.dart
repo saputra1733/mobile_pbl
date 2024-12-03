@@ -4,6 +4,8 @@ import '../widgets/footer.dart';
 
 
 class DashboardKaprodiScreen extends StatelessWidget {
+  const DashboardKaprodiScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,9 +65,9 @@ class DashboardKaprodiScreen extends StatelessWidget {
                     child: const Text("FOTO", style: TextStyle(color: Colors.black)),
                   ),
                   const SizedBox(width: 16),
-                  Column(
+                  const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text("(Nama Lengkap)", style: TextStyle(fontWeight: FontWeight.bold)),
                       Text("NIDN: (Nomor NIDN)"),
                     ],
@@ -80,7 +82,7 @@ class DashboardKaprodiScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: Footer(),
+      bottomNavigationBar: const Footer(),
 
     );
   }

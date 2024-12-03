@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_4/screens/login_screen.dart';
-import 'package:flutter_application_4/screens/profile_dosen_screen.dart';
-import 'package:flutter_application_4/screens/riwayat_nonjti.dart';
-import 'package:flutter_application_4/widgets/footer.dart';
+import 'package:mobile_pbl/screens/login_screen.dart';
+import 'package:mobile_pbl/screens/profile_dosen_screen.dart';
+import 'package:mobile_pbl/screens/riwayat_nonjti.dart';
+import 'package:mobile_pbl/widgets/footer.dart';
 
 class AgendaNonjti extends StatelessWidget {
+  const AgendaNonjti({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

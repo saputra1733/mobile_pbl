@@ -4,8 +4,7 @@ class DashboardCard extends StatelessWidget {
   final String title;
   final String count;
 
-  const DashboardCard({Key? key, required this.title, required this.count})
-      : super(key: key);
+  const DashboardCard({super.key, required this.title, required this.count});
 
   @override
   Widget build(BuildContext context) {

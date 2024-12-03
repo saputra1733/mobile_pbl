@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class PreventOverflowWidget extends StatelessWidget {
   final Widget child;
 
-  const PreventOverflowWidget({Key? key, required this.child}) : super(key: key);
+  const PreventOverflowWidget({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +27,8 @@ class PreventOverflowWidget extends StatelessWidget {
 }
 
 class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +41,7 @@ class ProfileScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              const Row(
                 children: [
                   CircleAvatar(
                     radius: 40,
@@ -47,8 +49,8 @@ class ProfileScreen extends StatelessWidget {
                       'https://example.com/profile.jpg',
                     ),
                   ),
-                  const SizedBox(width: 16),
-                  const Text(
+                  SizedBox(width: 16),
+                  Text(
                     "Dr. John Doe, PhD",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),

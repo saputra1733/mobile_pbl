@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_4/screens/agenda_nonjti.dart';
-import 'package:flutter_application_4/screens/login_screen.dart';
-import 'package:flutter_application_4/screens/profile_dosen_screen.dart';
-import 'package:flutter_application_4/widgets/footer.dart';
+import 'package:mobile_pbl/screens/agenda_nonjti.dart';
+import 'package:mobile_pbl/screens/login_screen.dart';
+import 'package:mobile_pbl/screens/profile_dosen_screen.dart';
+import 'package:mobile_pbl/widgets/footer.dart';
 
 class RiwayatNonjti extends StatelessWidget {
+  const RiwayatNonjti({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +49,7 @@ class RiwayatNonjti extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                  SizedBox(width: 45),
+                  const SizedBox(width: 45),
                 TextButton(
                   onPressed: () {
                     Navigator.push(

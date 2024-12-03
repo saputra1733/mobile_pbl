@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_4/widgets/footer.dart';
+import 'package:mobile_pbl/widgets/footer.dart';
 import '../widgets/prevent_overflow_widget.dart';
 
 class DownloadDocumentsScreen extends StatelessWidget {
+  const DownloadDocumentsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return PreventOverflowWidget(
@@ -97,8 +99,8 @@ class DownloadDocumentsScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: const [
+                      const Row(
+                        children: [
                           Icon(Icons.insert_drive_file, size: 30),
                           SizedBox(width: 10),
                           Text(
@@ -108,8 +110,8 @@ class DownloadDocumentsScreen extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 10),
-                      Row(
-                        children: const [
+                      const Row(
+                        children: [
                           Icon(Icons.calendar_today, size: 20),
                           SizedBox(width: 10),
                           Text("20-6-2029"),

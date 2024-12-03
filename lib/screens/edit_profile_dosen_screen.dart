@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_4/screens/login_screen.dart';
-import 'package:flutter_application_4/widgets/footer.dart';
+import 'package:mobile_pbl/screens/login_screen.dart';
+import 'package:mobile_pbl/widgets/footer.dart';
 
 class EditProfileDosenScreen extends StatelessWidget {
-  const EditProfileDosenScreen({Key? key}) : super(key: key);
+  const EditProfileDosenScreen({super.key});
 
   @override
   @override

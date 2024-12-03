@@ -4,6 +4,8 @@ import 'edit_profile_kaprodi_screen.dart';
 // import '../widgets/prevent_overflow_widget.dart';
 
 class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,7 +72,7 @@ class ProfileScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: Colors.black12),
                 ),
-                child: Row(
+                child: const Row(
                   children: [
                     CircleAvatar(
                       radius: 40,
@@ -78,8 +80,8 @@ class ProfileScreen extends StatelessWidget {
                         'https://storage.googleapis.com/a1aa/image/QuyYyxTMeZTnE6V7DkptUvcbJN7Gv1qoNS2ytmzpWYwLod5JA.jpg',
                       ),
                     ),
-                    const SizedBox(width: 16),
-                    const Text(
+                    SizedBox(width: 16),
+                    Text(
                       "Dr. John Doe, PhD",
                       style: TextStyle(
                         fontSize: 18,
@@ -119,7 +121,7 @@ class ProfileScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: Footer(),
+      bottomNavigationBar: const Footer(),
   
     );
   }

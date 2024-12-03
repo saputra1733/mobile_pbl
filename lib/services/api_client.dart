@@ -4,8 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiClient {
   final Dio dio = Dio(BaseOptions(
     baseUrl: 'http://192.168.69.26:8000/api/v1', // Ganti dengan URL Laravel Anda
-    connectTimeout: Duration(seconds: 10),
-    receiveTimeout: Duration(seconds: 10),
+    connectTimeout: const Duration(seconds: 10),
+    receiveTimeout: const Duration(seconds: 10),
   ));
 
   ApiClient() {

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_4/screens/agenda_nonjti.dart';
-import 'package:flutter_application_4/screens/dashboard_dosen_screen.dart';
-import 'package:flutter_application_4/screens/list_progress_agenda_screen.dart';
-import 'package:flutter_application_4/screens/update_progress.dart';
+import 'package:mobile_pbl/screens/agenda_nonjti.dart';
+import 'package:mobile_pbl/screens/dashboard_dosen_screen.dart';
+import 'package:mobile_pbl/screens/list_progress_agenda_screen.dart';
+import 'package:mobile_pbl/screens/update_progress.dart';
 
 class Footer extends StatelessWidget {
-  const Footer({Key? key}) : super(key: key);
+  const Footer({super.key});
 
   @override
   Widget build(BuildContext context) {

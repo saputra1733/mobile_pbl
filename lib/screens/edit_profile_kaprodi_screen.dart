@@ -5,6 +5,8 @@ import '../widgets/footer.dart';
 
 
 class EditProfileKaprodiScreen extends StatelessWidget {
+  const EditProfileKaprodiScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +51,7 @@ class EditProfileKaprodiScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircleAvatar(
+                  const CircleAvatar(
                     radius: 40,
                     backgroundImage: NetworkImage(
                       "https://storage.googleapis.com/a1aa/image/Xp7uS953nELxJdl3wVHlgjm8M3Fufb7dJv6WTbIqMf97vAzTA.jpg",
@@ -89,7 +91,7 @@ class EditProfileKaprodiScreen extends StatelessWidget {
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
                 childAspectRatio: 3, // Proporsi kotak
-                children: [
+                children: const [
                   CustomTextField(label: "Username"),
                   CustomTextField(label: "Program Studi"),
                   CustomTextField(label: "Nama Lengkap"),
@@ -113,11 +115,11 @@ class EditProfileKaprodiScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
-              CustomTextField(label: "Password saat ini", isPassword: true),
-              Row(
+              const CustomTextField(label: "Password saat ini", isPassword: true),
+              const Row(
                 children: [
                   Expanded(child: CustomTextField(label: "Password baru", isPassword: true)),
-                  const SizedBox(width: 16),
+                  SizedBox(width: 16),
                   Expanded(child: CustomTextField(label: "Konfirmasi Password", isPassword: true)),
                 ],
               ),
@@ -160,7 +162,7 @@ class EditProfileKaprodiScreen extends StatelessWidget {
       ),
 
         // Footer Navigasi Tetap
-        bottomNavigationBar: Footer(),
+        bottomNavigationBar: const Footer(),
 
     );
   }

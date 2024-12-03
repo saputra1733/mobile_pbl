@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class FooterLogin extends StatelessWidget {
+  const FooterLogin({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color(0xFF3366CC),
-      padding: EdgeInsets.all(8),
+      color: const Color(0xFF3366CC),
+      padding: const EdgeInsets.all(8),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -15,8 +17,8 @@ class FooterLogin extends StatelessWidget {
                 'https://pbs.twimg.com/profile_images/1628751671420669952/WbdE8w2x_400x400.jpg',
                 height: 25,
               ),
-              SizedBox(width: 20),
-              Expanded(
+              const SizedBox(width: 20),
+              const Expanded(
                 child: Text(
                   'BLU POLITEKNIK NEGERI MALANG\n'
                   '- Soekarno Hatta Street No.9 Malang 65141\n'
@@ -28,13 +30,13 @@ class FooterLogin extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 10),
-          Text(
+          const SizedBox(height: 10),
+          const Text(
             'Kontak',
             style: TextStyle(color: Colors.white),
           ),
-          SizedBox(height: 10),
-          Row(
+          const SizedBox(height: 10),
+          const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.facebook, color: Colors.white),
@@ -44,8 +46,8 @@ class FooterLogin extends StatelessWidget {
               Icon(Icons.youtube_searched_for, color: Colors.white),
             ],
           ),
-          SizedBox(height: 7),
-          Text(
+          const SizedBox(height: 7),
+          const Text(
             'Copyright © 2024 Polinema. All rights reserved.',
             style: TextStyle(color: Colors.white),
           ),

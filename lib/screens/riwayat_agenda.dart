@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_4/screens/list_progress_agenda_screen.dart';
-import 'package:flutter_application_4/screens/login_screen.dart';
-import 'package:flutter_application_4/screens/profile_dosen_screen.dart';
-// import 'package:flutter_application_4/widgets/agenda_card.dart';
-import 'package:flutter_application_4/widgets/footer.dart';
+import 'package:mobile_pbl/screens/list_progress_agenda_screen.dart';
+import 'package:mobile_pbl/screens/login_screen.dart';
+import 'package:mobile_pbl/screens/profile_dosen_screen.dart';
+// import 'package:mobile_pbl/widgets/agenda_card.dart';
+import 'package:mobile_pbl/widgets/footer.dart';
 
 class RiwayatAgenda extends StatelessWidget {
   const RiwayatAgenda({super.key});
@@ -64,7 +64,7 @@ class RiwayatAgenda extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 80),
+                const SizedBox(width: 80),
                 TextButton(
                   onPressed: () {},
                   child: const Text(
