@@ -82,7 +82,7 @@ class _ProfileDosenScreenState extends State<ProfileDosenScreen> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          EditProfileDosenScreen()),
+                                          const EditProfileDosenScreen()),
                                 );
                               },
                               style: TextButton.styleFrom(
@@ -97,7 +97,7 @@ class _ProfileDosenScreenState extends State<ProfileDosenScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => LoginScreen()),
+                                      builder: (context) => const LoginScreen()),
                                 );
                               },
                               style: TextButton.styleFrom(

@@ -138,7 +138,7 @@ class DownloadDocumentsScreen extends StatelessWidget {
             ),
           ),
         ),
-        bottomNavigationBar: Footer(),
+        bottomNavigationBar: const Footer(),
       ),
     );
   }

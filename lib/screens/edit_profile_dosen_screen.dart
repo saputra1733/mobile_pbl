@@ -60,7 +60,7 @@ Widget build(BuildContext context) {
               // Gunakan Navigator.push dengan context yang valid
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
               );
             },
             style: TextButton.styleFrom(

@@ -32,7 +32,7 @@ class RiwayatAgenda extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
               );
             },
             child: const Text('LOGOUT', style: TextStyle(color: Colors.white)),
@@ -53,7 +53,7 @@ class RiwayatAgenda extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ListProgressAgenda()),
+                          builder: (context) => const ListProgressAgenda()),
                     );
                   },
                   child: const Text(
@@ -123,7 +123,7 @@ class RiwayatAgenda extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: Footer(),
+      bottomNavigationBar: const Footer(),
     );
   }
 }

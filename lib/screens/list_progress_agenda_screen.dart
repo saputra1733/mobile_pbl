@@ -32,7 +32,7 @@ class ListProgressAgenda extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
               );
             },
             child: const Text('LOGOUT', style: TextStyle(color: Colors.white)),
@@ -63,7 +63,7 @@ class ListProgressAgenda extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => RiwayatAgenda()),
+                      MaterialPageRoute(builder: (context) => const RiwayatAgenda()),
                     );
                   },
                   child: const Text(
@@ -130,7 +130,7 @@ class ListProgressAgenda extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: Footer(),
+      bottomNavigationBar: const Footer(),
     );
   }
 }

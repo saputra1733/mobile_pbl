@@ -57,7 +57,7 @@ class _DashboardDosenScreenState extends State<DashboardDosenScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ProfileDosenScreen()),
+                MaterialPageRoute(builder: (context) => const ProfileDosenScreen()),
               );
             },
             style: TextButton.styleFrom(
@@ -74,7 +74,7 @@ class _DashboardDosenScreenState extends State<DashboardDosenScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
               );
             },
             style: TextButton.styleFrom(
@@ -107,19 +107,25 @@ class _DashboardDosenScreenState extends State<DashboardDosenScreen> {
                       children: [
                         DashboardCard(
                             title: 'Total Kegiatan',
-                            count: _profilData?['statistik']['total_kegiatan']
-                                    ?.toString() ??
-                                '[jumlah]'),
+                            count: _profilData?['statistik'] == null
+                                ? '[jumlah]'
+                                : _profilData?['statistik']['total_kegiatan']
+                                        ?.toString() ??
+                                    '[jumlah]'),
                         DashboardCard(
                             title: 'Kegiatan Selesai',
-                            count: _profilData?['statistik']['kegiatan_selesai']
-                                    ?.toString() ??
-                                '[jumlah]'),
+                            count: _profilData?['statistik'] == null
+                                ? '[jumlah]'
+                                : _profilData?['statistik']['kegiatan_selesai']
+                                        ?.toString() ??
+                                    '[jumlah]'),
                         DashboardCard(
                             title: 'Kegiatan Berjalan',
-                            count: _profilData?['statistik']['kegiatan_berjalan']
-                                    ?.toString() ??
-                                '[jumlah]'),
+                            count: _profilData?['statistik'] == null
+                                ? '[jumlah]'
+                                : _profilData?['statistik']['kegiatan_berjalan']
+                                        ?.toString() ??
+                                    '[jumlah]'),
                       ],
                     ),
                     const SizedBox(height: 20),
@@ -136,7 +142,7 @@ class _DashboardDosenScreenState extends State<DashboardDosenScreen> {
                             backgroundImage: _profilData != null &&
                                     _profilData!['foto'] != null
                                 ? NetworkImage(
-                                    'http://192.168.100.12:8000/uploads/${_profilData!['foto']}')
+                                    'http://192.168.13.22:8000/uploads/${_profilData!['foto']}')
                                 : null,
                             backgroundColor: Colors.brown,
                             child: _profilData?['foto'] == null
@@ -167,6 +173,16 @@ class _DashboardDosenScreenState extends State<DashboardDosenScreen> {
                         .map((entry) {
                           final index = entry.key;
                           final agenda = entry.value;
+                          String? nama_kegiatan = '[nama kegiatan]';
+                          if(agenda['kegiatan_institusi'] != null){
+                            nama_kegiatan = agenda['kegiatan_institusi']['nama_kegiatan_institusi'];
+                          } else if(agenda['kegiatan_luar_institusi'] != null){
+                            nama_kegiatan = agenda['kegiatan_luar_institusi']['nama_kegiatan_luar_institusi'];
+                          } else if(agenda['kegiatan_jurusan'] != null){
+                            nama_kegiatan = agenda['kegiatan_jurusan']['nama_kegiatan_jurusan'];
+                          } else if(agenda['kegiatan_program_studi'] != null){
+                            nama_kegiatan = agenda['kegiatan_program_studi']['nama_kegiatan_program_studi'];
+                          }
                           return Container(
                             margin: const EdgeInsets.only(bottom: 10.0),
                             padding: const EdgeInsets.all(16.0),
@@ -178,7 +194,7 @@ class _DashboardDosenScreenState extends State<DashboardDosenScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  agenda['nama_kegiatan'] ?? '[nama kegiatan]',
+                                  nama_kegiatan ?? '[nama kegiatan]',
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -206,142 +222,3 @@ class _DashboardDosenScreenState extends State<DashboardDosenScreen> {
     );
   }
 }
-
-
-// import 'package:flutter/material.dart';
-// import 'package:mobile_pbl/screens/login_screen.dart';
-// import 'package:mobile_pbl/screens/profile_dosen_screen.dart';
-// import 'package:mobile_pbl/widgets/footer.dart';
-// import 'package:mobile_pbl/widgets/dashboard_dosen_card.dart';
-// import 'package:mobile_pbl/services/api_dashboard.dart';
-
-// class DashboardDosenScreen extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Dashboard'),
-//         centerTitle: true,
-//         actions: [
-//           TextButton(
-//             onPressed: () {
-//               Navigator.push(
-//                 context,
-//                 MaterialPageRoute(builder: (context) => ProfileDosenScreen()),
-//               );
-//             },
-//             style: TextButton.styleFrom(
-//               backgroundColor: Colors.blue,
-//               foregroundColor: Colors.white,
-//             ),
-//             child: const Text(
-//               'PROFILE',
-//               style: TextStyle(color: Colors.white), 
-//             ),
-//           ),
-//           const SizedBox(width: 10), 
-//           TextButton(
-//             onPressed: () {
-//               Navigator.push(
-//                 context,
-//                 MaterialPageRoute(builder: (context) => LoginScreen()),
-//               );
-//             },
-//             style: TextButton.styleFrom(
-//               backgroundColor: Colors.red,
-//               foregroundColor: Colors.white,
-//             ),
-//             child: const Text(
-//               'LOGOUT',
-//               style: TextStyle(color: Colors.white), 
-//             ),
-//           ),
-//           const SizedBox(width: 10), 
-//         ],
-//       ),
-//       body: SingleChildScrollView(
-//         child: Padding(
-//           padding: const EdgeInsets.all(16.0),
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               const Text(
-//                 'Selamat datang, [nama lengkap user]',
-//                 style: TextStyle(fontSize: 18),
-//               ),
-//               const SizedBox(height: 20),
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                 children: const [
-//                   DashboardCard(title: 'Total Kegiatan', count: '[jumlah]'),
-//                   DashboardCard(title: 'Kegiatan Selesai', count: '[jumlah]'),
-//                   DashboardCard(title: 'Kegiatan Berjalan', count: '[jumlah]'),
-//                 ],
-//               ),
-//               const SizedBox(height: 20),
-//               Container(
-//                 padding: const EdgeInsets.all(16.0),
-//                 decoration: BoxDecoration(
-//                   color: Colors.grey[300],
-//                   borderRadius: BorderRadius.circular(10.0),
-//                 ),
-//                 child: Row(
-//                   children: [
-//                     CircleAvatar(
-//                       radius: 40,
-//                       backgroundColor: Colors.brown,
-//                       child: const Text('Foto'),
-//                     ),
-//                     const SizedBox(width: 16),
-//                     Column(
-//                       crossAxisAlignment: CrossAxisAlignment.start,
-//                       children: const [
-//                         Text(
-//                           '[nama lengkap]',
-//                           style: TextStyle(
-//                               fontSize: 16, fontWeight: FontWeight.bold),
-//                         ),
-//                         Text('NIDN: [nomer NIDN]'),
-//                         Text('Program Studi: [nama program studi]'),
-//                       ],
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//               const SizedBox(height: 20),
-//               ...List.generate(3, (index) {
-//                 return Container(
-//                   margin: const EdgeInsets.only(bottom: 10.0),
-//                   padding: const EdgeInsets.all(16.0),
-//                   decoration: BoxDecoration(
-//                     color: Colors.grey[300],
-//                     borderRadius: BorderRadius.circular(10.0),
-//                   ),
-//                   child: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       Text(
-//                         '[nama kegiatan]',
-//                         style: const TextStyle(fontWeight: FontWeight.bold),
-//                       ),
-//                       const Text('[nama Agenda]'),
-//                       Row(
-//                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                         children: [
-//                           const Text('[tanggal agenda]'),
-//                           Text('Agenda [${index + 1}/5]'),
-//                         ],
-//                       ),
-//                     ],
-//                   ),
-//                 );
-//               }),
-//             ],
-//           ),
-//         ),
-//       ),
-//       bottomNavigationBar: const Footer(),
-//     );
-//   }
-// }
-

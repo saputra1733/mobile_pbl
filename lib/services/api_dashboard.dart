@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class ApiDashboard {
-  static const String baseUrl = 'http://192.168.69.26:8000/api/v1/dosen/dashboard';
+  static const String baseUrl = 'http://192.168.66.134:8000/api/v1/dosen/dashboard';
 
   Future<Map<String, dynamic>> fetchDashboardData() async {
     final prefs = await SharedPreferences.getInstance();

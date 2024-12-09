@@ -45,12 +45,12 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_selectedLevel == '3') {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => DashboardDosenScreen()),
+        MaterialPageRoute(builder: (context) => const DashboardDosenScreen()),
       );
     } else if (_selectedLevel == '2') {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => DashboardKaprodiScreen()),
+        MaterialPageRoute(builder: (context) => const DashboardKaprodiScreen()),
       );
     }
   } else {
@@ -142,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: FooterLogin(),
+      bottomNavigationBar: const FooterLogin(),
     );
   }
 }

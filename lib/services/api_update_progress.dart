@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  final String baseUrl = "http://192.168.69.26:8000/api/create_agenda"; // Ganti dengan URL backend Anda
+  final String baseUrl = "http://192.168.66.134:8000/api/create_agenda"; // Ganti dengan URL backend Anda
 
   Future<List<dynamic>> getProgress() async {
     try {
