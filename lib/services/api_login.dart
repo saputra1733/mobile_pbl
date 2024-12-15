@@ -3,9 +3,9 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiLogin {
-  static const String baseUrl = 'http://192.168.69.26:8000/api/v1/login'; 
+  static const String baseUrl = 'http://192.168.100.12:8000/api/v1/login'; 
 
-  Future<Map<String, dynamic>> login(String username, String password, String levelId) async {
+  Future<Map<String, dynamic>> login(String username, String password) async {
     final url = Uri.parse(baseUrl); 
 
     try {
@@ -15,18 +15,11 @@ class ApiLogin {
         body: jsonEncode({
           'username': username,
           'password': password,
-          'level_id': levelId,
         }),
       );
 
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
-      
-      // print('Request body: ${jsonEncode({
-      //   'username': username,
-      //   'password': password,
-      //   'level_id': levelId,
-      // })}');
 
       // Periksa respons server
       if (response.statusCode == 200) {
@@ -48,7 +41,11 @@ class ApiLogin {
       } else {
         return {
           'success': false,
-          'message': 'Server error: ${response.statusCode}'
+          'message': response.statusCode == 422
+              ? (jsonDecode(response.body)['errors'] as Map<String, dynamic>)
+                  .values
+                  .join(', ')
+              : 'Server error: ${response.statusCode}'
         };
       }
     } catch (e) {

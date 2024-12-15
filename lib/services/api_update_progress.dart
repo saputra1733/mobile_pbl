@@ -1,86 +1,115 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ApiService {
-  final String baseUrl = "http://192.168.69.26:8000/api/create_agenda"; // Ganti dengan URL backend Anda
+class UpdateProgressService {
+  static const String baseUrl =
+      'http://192.168.100.12:8000/api/v1/dosen/dokumentasi';
 
-  Future<List<dynamic>> getProgress() async {
+  Future<Map<String, dynamic>> getKegiatanList() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) {
+      return {
+        'success': false,
+        'message': 'Token tidak ditemukan. Silakan login kembali.'
+      };
+    }
+
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/progress'),
+        Uri.parse('$baseUrl/agenda'),
         headers: {
+          'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'token', // Ganti dengan token jika menggunakan autentikasi
         },
       );
 
       if (response.statusCode == 200) {
-        return json.decode(response.body);
+        final Map<String, dynamic> data = json.decode(response.body);
+
+        if (data['status'] == 'success') {
+          return {
+            'success': true,
+            'message': data['message'],
+            'data': data['data']
+          };
+        } else {
+          return {'success': false, 'message': data['message']};
+        }
       } else {
-        throw Exception('Failed to load progress');
+        return {
+          'success': false,
+          'message': 'Server error: ${response.statusCode}'
+        };
       }
     } catch (e) {
-      rethrow;
+      return {'success': false, 'message': 'Error: $e'};
     }
   }
 
-  Future<void> addProgress(Map<String, dynamic> data) async {
-    try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/progress'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer YOUR_TOKEN',
-        },
-        body: json.encode(data),
-      );
+  Future<Map<String, dynamic>> updateProgress(
+      int agendaId, int progress, http.MultipartFile? file) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
 
-      if (response.statusCode != 201) {
-        throw Exception('Failed to add progress');
-      }
-    } catch (e) {
-      rethrow;
+    if (token == null) {
+      return {
+        'success': false,
+        'message': 'Token tidak ditemukan. Silakan login kembali.'
+      };
     }
-  }
 
-  Future<void> updateProgress(int id, Map<String, dynamic> data) async {
     try {
-      final response = await http.put(
-        Uri.parse('$baseUrl/progress/$id'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'token',
-        },
-        body: json.encode(data),
+      // Create a MultipartRequest
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('$baseUrl/update/$agendaId'), // Endpoint URL
       );
 
-      if (response.statusCode != 200) {
-        throw Exception('Failed to update progress');
+      // Add Authorization header
+      request.headers['Authorization'] = 'Bearer $token';
+
+      // Add text fields (if any)
+      request.fields['progres'] = progress.toString();
+      request.fields['deskripsi_dokumentasi'] =
+          'Some description here'; // Example text field
+
+      // Add the file
+      if (file != null) {
+        request.files.add(file);
+      }
+
+      // debug request
+      print('Request: ${request.method} ${request.url}');
+      print('Headers: ${request.headers}');
+      print('Fields: ${request.fields}');
+      // Send the request
+      var response = await request.send();
+
+      // Check response status
+      if (response.statusCode == 200) {
+        // If successful, decode the response body
+        var responseData = await response.stream.bytesToString();
+        Map<String, dynamic> data = json.decode(responseData);
+        return {'success': true, 'message': data['message']};
+      } else {
+        var responseData = await response.stream.bytesToString();
+        Map<String, dynamic> data = json.decode(responseData);
+        if (data['status'] == 'error') {
+          return {'success': false, 'message': data['message']};
+        }
+
+        // Handle non-200 status codes
+        return {
+          'success': false,
+          'message': 'Server error: ${response.statusCode}'
+        };
       }
     } catch (e) {
-      rethrow;
-    }
-  }
-
-  Future<void> deleteProgress(int id) async {
-    try {
-      final response = await http.delete(
-        Uri.parse('$baseUrl/progress/$id'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'token',
-        },
-      );
-
-      if (response.statusCode != 200) {
-        throw Exception('Failed to delete progress');
-      }
-    } catch (e) {
-      rethrow;
+      // Handle errors
+      return {'success': false, 'message': 'Error: $e'};
     }
   }
 }

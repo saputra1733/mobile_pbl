@@ -11,25 +11,25 @@ class FooterLogin extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            children: [
-              Image.network(
-                'https://pbs.twimg.com/profile_images/1628751671420669952/WbdE8w2x_400x400.jpg',
-                height: 25,
-              ),
-              const SizedBox(width: 20),
-              const Expanded(
-                child: Text(
-                  'BLU POLITEKNIK NEGERI MALANG\n'
-                  '- Soekarno Hatta Street No.9 Malang 65141\n'
-                  'Jatimulyo, Kec. Lowokwaru, Malang,\n'
-                  'East Java - Indonesia\n'
-                  '- PMDN',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   children: [
+          //     Image.network(
+          //       'https://pbs.twimg.com/profile_images/1628751671420669952/WbdE8w2x_400x400.jpg',
+          //       height: 25,
+          //     ),
+          //     const SizedBox(width: 20),
+          //     const Expanded(
+          //       child: Text(
+          //         'BLU POLITEKNIK NEGERI MALANG\n'
+          //         '- Soekarno Hatta Street No.9 Malang 65141\n'
+          //         'Jatimulyo, Kec. Lowokwaru, Malang,\n'
+          //         'East Java - Indonesia\n'
+          //         '- PMDN',
+          //         style: TextStyle(color: Colors.white),
+          //       ),
+          //     ),
+          //   ],
+          // ),
           const SizedBox(height: 10),
           const Text(
             'Kontak',
@@ -48,7 +48,7 @@ class FooterLogin extends StatelessWidget {
           ),
           const SizedBox(height: 7),
           const Text(
-            'Copyright © 2024 Polinema. All rights reserved.',
+            '2024 © Sistem Informasi Manajemen SDM',
             style: TextStyle(color: Colors.white),
           ),
         ],

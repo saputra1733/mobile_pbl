@@ -1,12 +1,55 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_pbl/screens/list_progress_agenda_screen.dart';
 import 'package:mobile_pbl/screens/login_screen.dart';
 import 'package:mobile_pbl/screens/profile_dosen_screen.dart';
-// import 'package:mobile_pbl/widgets/agenda_card.dart';
+import 'package:mobile_pbl/services/agenda_service.dart';
 import 'package:mobile_pbl/widgets/footer.dart';
 
-class RiwayatAgenda extends StatelessWidget {
+class RiwayatAgenda extends StatefulWidget {
   const RiwayatAgenda({super.key});
+
+  @override
+  State<RiwayatAgenda> createState() => _RiwayatAgendaState();
+}
+
+class _RiwayatAgendaState extends State<RiwayatAgenda> {
+  final AgendaService _agendaService = AgendaService();
+  List<dynamic> _agendas = [];
+  bool _isLoading = true;
+  String _error = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAgendas();
+  }
+
+  Future<void> _loadAgendas() async {
+    try {
+      setState(() {
+        _isLoading = true;
+        _error = '';
+      });
+
+      final result = await _agendaService.getAgendaList();
+
+      if (result['success']) {
+        setState(() {
+          _agendas = result['data'];
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _error = result['message'];
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +75,7 @@ class RiwayatAgenda extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
               );
             },
             child: const Text('LOGOUT', style: TextStyle(color: Colors.white)),
@@ -49,15 +92,9 @@ class RiwayatAgenda extends StatelessWidget {
               children: [
                 // Hanya tombol "Daftar Progress"
                 TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ListProgressAgenda()),
-                    );
-                  },
+                  onPressed: () {},
                   child: const Text(
-                    'Daftar Progress Agenda',
+                    'Daftar Kegiatan',
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -68,7 +105,7 @@ class RiwayatAgenda extends StatelessWidget {
                 TextButton(
                   onPressed: () {},
                   child: const Text(
-                    'Riwayat Agenda',
+                    'Riwayat',
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -96,39 +133,60 @@ class RiwayatAgenda extends StatelessWidget {
           ),
 
           // List of Agenda Cards
-           Expanded(
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              children: [
-                buildKegiatanCard(
-                  "Seminar Akademik",
-                  "20/4/2024",
-                  "22/4/2024",
-                  "Drs. Andi",
-                ),
-                buildKegiatanCard(
-                  "Workshop",
-                  "20/4/2024",
-                  "22/4/2024",
-                  "Drs. Andi",
-                ),
-                buildKegiatanCard(
-                  "Rapat Paripurna",
-                  "20/4/2024",
-                  "22/4/2024",
-                  "Drs. Andi",
-                ),
-              ],
-            ),
+          Expanded(
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _error.isNotEmpty
+                    ? Center(child: Text(_error))
+                    : _agendas.isEmpty
+                        ? const Center(child: Text("No agendas found"))
+                        : ListView.builder(
+                            itemCount: _agendas.length,
+                            itemBuilder: (context, index) {
+                              final agenda = _agendas[index];
+                              final namaKegiatan =
+                                  agenda['nama_kegiatan_jurusan'] ??
+                                      agenda['nama_kegiatan_program_studi'] ??
+                                      'Tidak ada nama';
+
+                              String pic = agenda['user']['nama_lengkap'] ?? '';
+                              if (pic.length > 20) {
+                                pic = '${pic.substring(0, 20)}...';
+                              }
+
+                              String subtitle = agenda['agenda_aktif']
+                                          ['nama_agenda'] ??
+                                      '';
+                              if (subtitle.length > 25) {
+                                subtitle = '${subtitle.substring(0, 20)}...';
+                              }
+
+                              String filename =
+                                  agenda['agenda_aktif']['file_surat_agenda'] ??
+                                      '';
+                              if (filename.length > 40) {
+                                filename = '${filename.substring(38)}...';
+                              }
+
+                              return buildKegiatanCard(
+                                namaKegiatan,
+                                agenda['tanggal_mulai'] ?? '',
+                                agenda['tanggal_selesai'] ?? '',
+                                agenda['agenda_aktif']['progress'] ?? 0,
+                                pic
+                              );
+                            },
+                          ),
           ),
         ],
       ),
-      bottomNavigationBar: Footer(),
+      bottomNavigationBar: const Footer(),
     );
   }
-}
-Widget buildKegiatanCard(
-      String title, String startDate, String endDate, String pic) {
+
+  // Existing buildKegiatanCard method
+  Widget buildKegiatanCard(
+      String title, String startDate, String endDate, int progress, String pic) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10.0),
       padding: const EdgeInsets.all(16.0),
@@ -171,5 +229,4 @@ Widget buildKegiatanCard(
       ),
     );
   }
-
-
+}

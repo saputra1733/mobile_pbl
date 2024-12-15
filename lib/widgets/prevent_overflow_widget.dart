@@ -100,7 +100,7 @@ class ProfileScreen extends StatelessWidget {
 }
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: ProfileScreen(),
   ));
 }

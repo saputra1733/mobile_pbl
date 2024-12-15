@@ -1,97 +1,162 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:mobile_pbl/screens/login_screen.dart';
+import 'package:mobile_pbl/screens/profile_dosen_screen.dart';
 import 'package:mobile_pbl/widgets/footer.dart';
+import 'package:mobile_pbl/services/api_profile.dart';
 
-class EditProfileDosenScreen extends StatelessWidget {
+class EditProfileDosenScreen extends StatefulWidget {
   const EditProfileDosenScreen({super.key});
 
   @override
-  @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildHeader(context), // Kirim context ke _buildHeader
-            const SizedBox(height: 20),
-            _buildProfilePhoto(),
-            const SizedBox(height: 20),
-            _buildProfileForm(),
-            const SizedBox(height: 20),
-            _buildPasswordSection(),
-            const SizedBox(height: 20),
-            _buildActionButtons(),
-          ],
-        ),
-      ),
-    ),
-    bottomNavigationBar: const Footer(),
-  );
+  _EditProfileDosenScreenState createState() => _EditProfileDosenScreenState();
 }
 
+class _EditProfileDosenScreenState extends State<EditProfileDosenScreen> {
+  Map<String, dynamic>? _profileData;
+  late Map<String, TextEditingController> controllers = {};
+  bool _isLoading = true;
 
-  Widget _buildHeader(BuildContext context) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      const Text(
-        'Edit Profile',
-        style: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
+  @override
+  void initState() {
+    super.initState();
+    _fetchProfileData();
+  }
+
+  Future<void> _fetchProfileData() async {
+    final apiProfile = ApiProfile();
+    final result = await apiProfile.fetchProfile();
+
+    // print('Profile Data: $result');
+
+    if (result['success']) {
+      _profileData = result['data'];
+      _initializeControllers(_profileData!);
+      setState(() {
+        _isLoading = false;
+      });
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result['message'])),
+      );
+    }
+  }
+
+  void _initializeControllers(Map<String, dynamic> data) {
+    data.forEach((key, value) {
+      controllers[key] ??= TextEditingController(text: value?.toString() ?? '');
+    });
+  }
+
+  @override
+  void dispose() {
+    controllers.values.forEach((controller) => controller.dispose());
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildHeader(context), // Kirim context ke _buildHeader
+              const SizedBox(height: 20),
+              _buildProfilePhoto(),
+              const SizedBox(height: 20),
+              _buildProfileForm(),
+              const SizedBox(height: 20),
+              _buildPasswordSection(),
+              const SizedBox(height: 20),
+              _buildActionButtons(),
+            ],
+          ),
         ),
       ),
-      Row(
-        children: [
-          TextButton(
-            onPressed: () {},
+      bottomNavigationBar: const Footer(),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'Edit Profile',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Row(
+          children: [
+            TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ProfileDosenScreen()),
+              );
+            },
             style: TextButton.styleFrom(
-              backgroundColor: const Color.fromRGBO(9, 109, 225, 1),
+              backgroundColor: Colors.blue,
               foregroundColor: Colors.white,
             ),
-            child: const Text('PROFILE'),
+            child: const Text(
+              'PROFILE',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
           const SizedBox(width: 10),
           TextButton(
             onPressed: () {
-              // Gunakan Navigator.push dengan context yang valid
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
               );
             },
             style: TextButton.styleFrom(
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
             ),
-            child: const Text('LOGOUT'),
+            child: const Text(
+              'LOGOUT',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
-        ],
-      ),
-    ],
-  );
-}
-
+          const SizedBox(width: 10),
+          ],
+        ),
+      ],
+    );
+  }
 
   Widget _buildProfilePhoto() {
     return Column(
       children: [
-        Container(
-          width: 120,
-          height: 120,
-          decoration: BoxDecoration(
-            color: Colors.brown[300],
-            shape: BoxShape.circle,
-          ),
-          child: const Center(
-            child: Text(
-              '[tempat foto]',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
+        CircleAvatar(
+          radius: 50,
+          backgroundColor: Colors.brown.shade300,
+          backgroundImage: _profileData != null &&
+                  _profileData!['foto'] != null &&
+                  _profileData!['foto'].startsWith('data:image')
+              ? MemoryImage(base64Decode(
+                  _profileData!['foto'].split(',').last)) // Hapus header Base64
+              : null,
+          child: _profileData?['foto'] == null
+              ? const Icon(
+                  Icons.photo,
+                  size: 50,
+                  color: Colors.white,
+                )
+              : null,
         ),
         const SizedBox(height: 10),
         ElevatedButton(
@@ -110,65 +175,153 @@ Widget build(BuildContext context) {
   }
 
   Widget _buildProfileForm() {
+    if (_profileData == null || controllers.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Column(
       children: [
         Row(
           children: [
-            Expanded(child: _buildFormField('Username')),
+            Expanded(
+              child: _buildFormField(
+                'Username',
+                controller: controllers['username'],
+              ),
+            ),
             const SizedBox(width: 16),
-            Expanded(child: _buildFormField('Jabatan Fungsional')),
+            Expanded(
+              child: _buildFormField(
+                'Jabatan Fungsional',
+                controller: controllers['jabatan_fungsional'],
+              ),
+            ),
           ],
         ),
         Row(
           children: [
-            Expanded(child: _buildFormField('Gelar Depan')),
+            Expanded(
+              child: _buildFormField(
+                'Gelar Depan',
+                controller: controllers['gelar_depan'],
+              ),
+            ),
             const SizedBox(width: 16),
-            Expanded(child: _buildFormField('Program Studi')),
+            Expanded(
+              child: _buildFormField(
+                'Program Studi',
+                controller: controllers['program_studi'],
+              ),
+            ),
           ],
         ),
         Row(
           children: [
-            Expanded(child: _buildFormField('Nama Lengkap')),
+            Expanded(
+              child: _buildFormField(
+                'Nama Lengkap',
+                controller: controllers['nama_lengkap'],
+              ),
+            ),
             const SizedBox(width: 16),
-            Expanded(child: _buildFormField('Pendidikan Terakhir')),
+            Expanded(
+              child: _buildFormField(
+                'Pendidikan Terakhir',
+                controller: controllers['pendidikan_terakhir'],
+              ),
+            ),
           ],
         ),
         Row(
           children: [
-            Expanded(child: _buildFormField('Gelar Belakang')),
+            Expanded(
+              child: _buildFormField(
+                'Gelar Belakang',
+                controller: controllers['gelar_belakang'],
+              ),
+            ),
             const SizedBox(width: 16),
-            Expanded(child: _buildFormField('Status Pernikahan')),
+            Expanded(
+              child: _buildFormField(
+                'Status Pernikahan',
+                controller: controllers['status_pernikahan'],
+              ),
+            ),
           ],
         ),
         Row(
           children: [
-            Expanded(child: _buildFormField('NIDN')),
+            Expanded(
+              child: _buildFormField(
+                'NIDN',
+                controller: controllers['nidn'],
+              ),
+            ),
             const SizedBox(width: 16),
-            Expanded(child: _buildFormField('Status Ikatan Kerja')),
+            Expanded(
+              child: _buildFormField(
+                'Status Ikatan Kerja',
+                controller: controllers['status_ikatan_kerja'],
+              ),
+            ),
           ],
         ),
         Row(
           children: [
-            Expanded(child: _buildFormField('Jenis Kelamin')),
+            Expanded(
+              child: _buildFormField(
+                'Jenis Kelamin',
+                controller: controllers['jenis_kelamin'],
+              ),
+            ),
             const SizedBox(width: 16),
-            Expanded(child: _buildFormField('Email')),
+            Expanded(
+              child: _buildFormField(
+                'Email',
+                controller: controllers['email'],
+              ),
+            ),
           ],
         ),
         Row(
           children: [
-            Expanded(child: _buildFormField('Tempat Lahir')),
+            Expanded(
+              child: _buildFormField(
+                'Tempat Lahir',
+                controller: controllers['tempat_lahir'],
+              ),
+            ),
             const SizedBox(width: 16),
-            Expanded(child: _buildFormField('Tanggal Lahir')),
+            Expanded(
+              child: _buildFormField(
+                'Tanggal Lahir',
+                controller: controllers['tanggal_lahir'],
+              ),
+            ),
           ],
         ),
         Row(
           children: [
-            Expanded(child: _buildFormField('Agama')),
+            Expanded(
+              child: _buildFormField(
+                'Agama',
+                controller: controllers['agama'],
+              ),
+            ),
             const SizedBox(width: 16),
-            Expanded(child: _buildFormField('Asal Perguruan Tinggi')),
+            Expanded(
+              child: _buildFormField(
+                'Asal Perguruan Tinggi',
+                controller: controllers['asal_perguruan_tinggi'],
+              ),
+            ),
           ],
         ),
-        _buildFormField('Alamat', fullWidth: true),
+        _buildFormField(
+          'Alamat',
+          fullWidth: true,
+          controller: controllers['alamat'],
+        ),
       ],
     );
   }
@@ -197,7 +350,10 @@ Widget build(BuildContext context) {
     );
   }
 
-  Widget _buildFormField(String label, {bool fullWidth = false}) {
+  Widget _buildFormField(String label,
+      {bool fullWidth = false,
+      TextEditingController? controller,
+      Function(String)? onChanged}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Column(
@@ -211,12 +367,18 @@ Widget build(BuildContext context) {
             ),
           ),
           const SizedBox(height: 8),
-          Container(
-            width: fullWidth ? double.infinity : null,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(4),
+          TextFormField(
+            controller: controller,
+            onChanged: onChanged,
+            decoration: InputDecoration(
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+              filled: true,
+              fillColor: Colors.grey[300],
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(4),
+                borderSide: BorderSide.none,
+              ),
             ),
           ),
         ],
@@ -224,12 +386,30 @@ Widget build(BuildContext context) {
     );
   }
 
+  Future<void> _updateProfile() async {
+    final apiProfile = ApiProfile();
+    final result = await apiProfile.updateProfile(
+      controllers.map((key, value) => MapEntry(key, value.text)),
+    );
+    if (result['success']) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile berhasil diupdate.')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result['message'])),
+      );
+    }
+  }
+
   Widget _buildActionButtons() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            _updateProfile();
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.green,
             foregroundColor: Colors.white,

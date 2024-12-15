@@ -14,12 +14,12 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  String? _selectedLevel;
   bool _isLoading = false;
+  bool _isPasswordVisible = false;
   final ApiLogin _apiService = ApiLogin();
 
   void _login() async {
-  if (_selectedLevel == null || _usernameController.text.isEmpty || _passwordController.text.isEmpty) {
+  if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Semua field wajib diisi')),
     );
@@ -33,7 +33,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final response = await _apiService.login(
     _usernameController.text,
     _passwordController.text,
-    _selectedLevel!,
   );
 
   setState(() {
@@ -41,16 +40,19 @@ class _LoginScreenState extends State<LoginScreen> {
   });
 
   if (response['success']) {
+    print(response['user']['level_id']);
     // Redirect pengguna berdasarkan level
-    if (_selectedLevel == '3') {
+    if (response['user']['level_id'] == 3) {
+      print('redirect to dosen');
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => DashboardDosenScreen()),
+        MaterialPageRoute(builder: (context) => const DashboardDosenScreen()),
       );
-    } else if (_selectedLevel == '2') {
+    } else if (response['user']['level_id'] == 2) {
+      print('redirect to kaprodi');
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => DashboardKaprodiScreen()),
+        MaterialPageRoute(builder: (context) => const DashboardKaprodiScreen()),
       );
     }
   } else {
@@ -68,15 +70,15 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: const Color(0xFF3366CC),
         title: Row(
           children: [
-            Image.network(
-              'https://upload.wikimedia.org/wikipedia/id/4/4a/Logo_Politeknik_Negeri_Malang.png',
-              height: 50,
-            ),
+            // Image.network(
+            //   'https://upload.wikimedia.org/wikipedia/id/4/4a/Logo_Politeknik_Negeri_Malang.png',
+            //   height: 50,
+            // ),
             const SizedBox(width: 20),
-            const Text(
-              'Sistem Informasi Manajemen SDM',
-              style: TextStyle(fontSize: 15),
-            ),
+            // const Text(
+            //   'Sistem Informasi Manajemen SDM',
+            //   style: TextStyle(fontSize: 15),
+            // ),
           ],
         ),
       ),
@@ -86,26 +88,14 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 50),
+              Image.network(
+              'https://upload.wikimedia.org/wikipedia/id/4/4a/Logo_Politeknik_Negeri_Malang.png',
+              height: 75,
+              ),
+              const SizedBox(height: 20),
               const Text(
                 'Selamat Datang',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  labelText: 'Level',
-                  border: OutlineInputBorder(),
-                ),
-                items: const [
-                  DropdownMenuItem(value: '3', child: Text('Dosen')),
-                  DropdownMenuItem(value: '2', child: Text('Kaprodi')),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedLevel = value;
-                  });
-                },
               ),
               const SizedBox(height: 20),
               TextField(
@@ -118,10 +108,20 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 20),
               TextField(
                 controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
+                obscureText: !_isPasswordVisible,
+                decoration: InputDecoration(
                   labelText: 'Password',
                   border: OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -142,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: FooterLogin(),
+      bottomNavigationBar: const FooterLogin(),
     );
   }
 }

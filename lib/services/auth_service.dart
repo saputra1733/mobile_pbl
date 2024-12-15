@@ -7,7 +7,7 @@
 // class AuthService {
 //   final ApiClient _apiClient = ApiClient();
 //   final Dio dio = Dio(BaseOptions(
-//   baseUrl: 'http://192.168.100.12:8000/api/v1', // Sesuaikan dengan server Anda
+//   baseUrl: 'http://192.168.1.18:8000/api/v1', // Sesuaikan dengan server Anda
 //   connectTimeout: Duration(seconds: 10),
 //   receiveTimeout: Duration(seconds: 10),
 // ));

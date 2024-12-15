@@ -1,144 +1,124 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_pbl/models/activity_model.dart';
 import 'package:mobile_pbl/widgets/footer.dart';
 import '../widgets/prevent_overflow_widget.dart';
+import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class DownloadDocumentsScreen extends StatelessWidget {
-  const DownloadDocumentsScreen({super.key});
+class DownloadDocumentScreen extends StatelessWidget {
+  final ActivityModel activity;
+
+  const DownloadDocumentScreen({
+    super.key,
+    required this.activity,
+  });
+
+  Future<void> _downloadFile() async {
+    if (activity.fileSurat != null) {
+      final url = 'http://192.168.100.12:8000/storage/${activity.fileSurat}';
+      if (!await launchUrl(Uri.parse(url))) {
+        throw Exception('Could not launch $url');
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final kegiatan = activity.kegiatan;
+
     return PreventOverflowWidget(
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.blue,
           title: const Text(
             "POLINEMA",
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.white),
           ),
-          backgroundColor: Colors.white,
-          elevation: 1,
           actions: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/profile');
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              child: const Text("PROFILE"),
+            TextButton(
+              onPressed: () => Navigator.pushNamed(context, '/profile-dosen'),
+              child: const Text('PROFILE', style: TextStyle(color: Colors.white)),
             ),
-            const SizedBox(width: 10),
-            ElevatedButton(
-              onPressed: () {
-                // Logika logout
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              child: const Text("LOGOUT"),
+            TextButton(
+              onPressed: () => Navigator.pushNamed(context, '/login'),
+              child: const Text('LOGOUT', style: TextStyle(color: Colors.white)),
             ),
-            const SizedBox(width: 10),
           ],
         ),
         body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Center(
-                  child: Text(
-                    "Download Dokumen",
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: "Cari Surat Tugas",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Aksi pencarian
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[300],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: const Icon(Icons.search, color: Colors.black),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Container(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Card(
+                child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [BoxShadow(color: Colors.grey.shade300, blurRadius: 6)],
-                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Row(
-                        children: [
-                          Icon(Icons.insert_drive_file, size: 30),
-                          SizedBox(width: 10),
-                          Text(
-                            "Seminar Akademik",
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                        ],
+                      Text(
+                        activity.judulSurat ?? 'Tidak ada judul',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      const SizedBox(height: 10),
-                      const Row(
-                        children: [
-                          Icon(Icons.calendar_today, size: 20),
-                          SizedBox(width: 10),
-                          Text("20-6-2029"),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          // Aksi unduh dokumen
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                      const SizedBox(height: 16),
+                      Text('Nomor Surat: ${activity.nomerSurat ?? '-'}'),
+                      if (activity.tanggalSurat != null)
+                        Text(
+                          'Tanggal Surat: ${DateFormat('dd MMMM yyyy').format(DateTime.parse(activity.tanggalSurat!))}',
+                        ),
+                      const SizedBox(height: 24),
+                      if (activity.fileSurat != null) ...[
+                        ElevatedButton.icon(
+                          onPressed: _downloadFile,
+                          icon: const Icon(Icons.download),
+                          label: const Text('Download Surat'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            foregroundColor: Colors.white,
                           ),
                         ),
-                        icon: const Icon(Icons.download, color: Colors.white),
-                        label: const Text("Unduh Dokumen", style: TextStyle(color: Colors.white)),
-                      ),
+                      ],
                     ],
                   ),
                 ),
+              ),
+              if (kegiatan != null) ...[
+                const SizedBox(height: 16),
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Detail Kegiatan',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Text('Nama Kegiatan: ${kegiatan.namaKegiatan}'),
+                        Text('Deskripsi: ${kegiatan.deskripsiKegiatan}'),
+                        Text('Lokasi: ${kegiatan.lokasiKegiatan}'),
+                        Text('Penyelenggara: ${kegiatan.penyelenggara}'),
+                        Text('Status: ${kegiatan.statusKegiatan}'),
+                        if (kegiatan.tanggalMulai != null && kegiatan.tanggalSelesai != null)
+                          Text(
+                            'Periode: ${DateFormat('dd MMM yyyy').format(DateTime.parse(kegiatan.tanggalMulai!))} - ${DateFormat('dd MMM yyyy').format(DateTime.parse(kegiatan.tanggalSelesai!))}',
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
-            ),
+            ],
           ),
         ),
-        bottomNavigationBar: Footer(),
+        bottomNavigationBar: const Footer(),
       ),
     );
   }
